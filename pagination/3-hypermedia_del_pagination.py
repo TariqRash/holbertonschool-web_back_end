@@ -46,22 +46,20 @@ class Server:
             page_size: the number of items per page.
 
         Returns:
-            A dict with index, next_index, page_size, and data.
+            A dict with index, next_index, page_size, data.
         """
-        indexed = self.indexed_dataset()
-        assert isinstance(index, int) and 0 <= index < len(
-            self.dataset()
-        )
+        dataset = self.indexed_dataset()
+        data_len = len(self.dataset())
+        assert index is not None and 0 <= index < data_len
         data = []
         current = index
-        while len(data) < page_size and current < len(self.dataset()):
-            if current in indexed:
-                data.append(indexed[current])
+        while len(data) < page_size and current < data_len:
+            if current in dataset:
+                data.append(dataset[current])
             current += 1
-        next_index = current
         return {
             'index': index,
             'data': data,
             'page_size': len(data),
-            'next_index': next_index
+            'next_index': current
         }
