@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Deletion-resilient hypermedia pagination."""
+"""
+Deletion-resilient hypermedia pagination
+"""
 
 import csv
 import math
@@ -39,15 +41,7 @@ class Server:
 
     def get_hyper_index(self, index: int = None,
                         page_size: int = 10) -> Dict:
-        """Return a dict with deletion-resilient pagination info.
-
-        Args:
-            index: the start index of the current page.
-            page_size: the number of items per page.
-
-        Returns:
-            A dict with index, next_index, page_size, data.
-        """
+        """Return deletion-resilient pagination dictionary."""
         dataset = self.indexed_dataset()
         data_len = len(self.dataset())
         assert index is not None and 0 <= index < data_len
