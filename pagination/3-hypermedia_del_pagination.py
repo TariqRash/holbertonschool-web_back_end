@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-"""
-Deletion-resilient hypermedia pagination
-"""
+"""Module for deletion-resilient hypermedia pagination."""
 
 import csv
-import math
-from typing import List, Dict
+from typing import Dict, List
 
 
 class Server:
@@ -35,32 +32,35 @@ class Server:
             dataset = self.dataset()
             truncated_dataset = dataset[:1000]
             self.__indexed_dataset = {
-                i: dataset[i] for i in range(len(dataset))
+                i: truncated_dataset[i] for i in range(len(truncated_dataset))
             }
         return self.__indexed_dataset
 
     def get_hyper_index(self, index: int = None,
                         page_size: int = 10) -> Dict:
-        """
-            Get the hyper index
+        """Return deletion-resilient hypermedia pagination metadata.
 
-            Args:
-                index: Current page
-                page_size: Total size of the page
+        Args:
+            index: the starting index of the page.
+            page_size: the number of available rows to return.
 
-            Return:
-                Hyper index
+        Returns:
+            A dict with index, next_index, page_size, and data.
         """
         index_data = self.indexed_dataset()
         data_len = len(self.dataset())
         assert index is not None
         assert index >= 0 and index < data_len
-        data = []
+
+        next_indices = []
         current = index
-        while len(data) < page_size and current < data_len:
+        while current < data_len and len(next_indices) < page_size:
             if current in index_data:
-                data.append(index_data[current])
+                next_indices.append(current)
             current += 1
+
+        data = [index_data[i] for i in next_indices]
+
         return {
             'index': index,
             'data': data,
