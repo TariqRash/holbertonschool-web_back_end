@@ -52,13 +52,12 @@ class Server:
                 Hyper index
         """
         index_data = self.indexed_dataset()
-        keys_list = list(index_data.keys())
+        data_len = len(self.dataset())
         assert index is not None
-        assert index >= 0 and index < len(keys_list)
+        assert index >= 0 and index < data_len
         data = []
         current = index
-        while len(data) < page_size and current < max(
-                keys_list) + 1:
+        while len(data) < page_size and current < data_len:
             if current in index_data:
                 data.append(index_data[current])
             current += 1
