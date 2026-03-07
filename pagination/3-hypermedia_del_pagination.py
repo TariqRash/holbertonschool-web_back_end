@@ -62,6 +62,9 @@ class Server:
                 data.append(index_data[next_index])
             next_index += 1
 
+        if next_index >= data_len:
+            next_index = None
+
         return {
             'index': index,
             'data': data,
