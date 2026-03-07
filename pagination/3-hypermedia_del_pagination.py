@@ -51,20 +51,19 @@ class Server:
             Hyper index
         """
         index_data = self.indexed_dataset()
-        keys_list = list(index_data.keys())
-        assert index is not None
-        assert index >= 0 and index < len(keys_list)
+        assert index is not None and index >= 0
+        assert index < len(self.dataset())
 
         data = []
-        next_index = index
-        while next_index < max(keys_list) + 1 and len(data) < page_size:
-            if next_index in index_data:
-                data.append(index_data[next_index])
-            next_index += 1
+        curr = index
+        while curr < len(self.dataset()) and len(data) < page_size:
+            if curr in index_data:
+                data.append(index_data[curr])
+            curr += 1
 
         return {
             'index': index,
             'data': data,
-            'page_size': len(data),
-            'next_index': next_index
+            'page_size': page_size,
+            'next_index': curr
         }
