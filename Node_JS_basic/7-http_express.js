@@ -1,4 +1,4 @@
-const http = require('http');
+const express = require('express');
 const fs = require('fs');
 
 function buildStudentsReport(path) {
@@ -34,27 +34,20 @@ function buildStudentsReport(path) {
   });
 }
 
-const app = http.createServer((request, response) => {
-  response.statusCode = 200;
-  response.setHeader('Content-Type', 'text/plain');
+const app = express();
 
-  if (request.url === '/') {
-    response.end('Hello Holberton School!');
-    return;
-  }
+app.get('/', (request, response) => {
+  response.status(200).send('Hello Holberton School!');
+});
 
-  if (request.url === '/students') {
-    buildStudentsReport(process.argv[2])
-      .then((report) => {
-        response.end(`This is the list of our students\n${report}`);
-      })
-      .catch((error) => {
-        response.end(`This is the list of our students\n${error.message}`);
-      });
-    return;
-  }
-
-  response.end('Hello Holberton School!');
+app.get('/students', (request, response) => {
+  buildStudentsReport(process.argv[2])
+    .then((report) => {
+      response.status(200).send(`This is the list of our students\n${report}`);
+    })
+    .catch((error) => {
+      response.status(200).send(`This is the list of our students\n${error.message}`);
+    });
 });
 
 app.listen(1245);
