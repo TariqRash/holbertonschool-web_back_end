@@ -1,9 +1,28 @@
 import fs from 'fs';
-export function readDatabase(p){
-return new Promise((res,rej)=>{
-fs.readFile(p,'utf8',(e,d)=>{
-if(e) return rej(new Error('Cannot load the database'));
-const lines=d.split('\n').filter(Boolean).slice(1);
-const out={};
-lines.forEach(l=>{const[a,,,f]=l.split(',');if(!out[f])out[f]=[];out[f].push(a);});
-res(out);});});}
+
+const readDatabase = (path) => new Promise((resolve, reject) => {
+  fs.readFile(path, 'utf8', (error, fileContent) => {
+    if (error) {
+      reject(error);
+      return;
+    }
+
+    const lines = fileContent.split('\n').filter((line) => line.trim() !== '');
+    const students = lines.slice(1);
+    const studentsByField = {};
+
+    students.forEach((student) => {
+      const [firstname, , , field] = student.split(',');
+
+      if (!studentsByField[field]) {
+        studentsByField[field] = [];
+      }
+
+      studentsByField[field].push(firstname);
+    });
+
+    resolve(studentsByField);
+  });
+});
+
+export default readDatabase;
