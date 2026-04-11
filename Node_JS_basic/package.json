@@ -1,0 +1,8 @@
+{
+"name":"node_js_basics",
+"version":"1.0.0",
+"scripts":{
+"dev":"nodemon --exec babel-node ./full_server/server.js database.csv"
+},
+"dependencies":{"express":"^4.17.1"}
+}
